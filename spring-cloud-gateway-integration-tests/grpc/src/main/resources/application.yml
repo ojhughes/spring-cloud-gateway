@@ -1,0 +1,8 @@
+grpc:
+  enableReflection: true
+server:
+  port: 8081
+logging:
+  level:
+    io.grpc.netty: DEBUG
+    io.netty: DEBUG

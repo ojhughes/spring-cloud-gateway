@@ -16,6 +16,9 @@
 
 package org.springframework.cloud.gateway.tests.http2;
 
+import reactor.netty.http.HttpProtocol;
+import reactor.netty.http.client.HttpClient;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -53,6 +56,15 @@ public class Http2Application {
 				.route(r -> r.path("/httpbin/**").uri("https://nghttp2.org")).build();
 	}
 
+	@Bean
+	HttpClient http2client(){
+		return HttpClient
+				.newConnection()
+				.protocol(HttpProtocol.H2C)
+				.wiretap(true)
+				.keepAlive(true)
+				.headers(h -> h.add("Content-Type", "application/grpc+protobuf").add("TE", "trailers"));
+	}
 	public static void main(String[] args) {
 		SpringApplication.run(Http2Application.class, args);
 	}

@@ -1,22 +1,46 @@
 logging:
   level:
     org.springframework.cloud.gateway: TRACE
+    org.springframework.web: TRACE
     reactor.netty: DEBUG
+    io.netty: DEBUG
 
 server:
-  ssl:
-    key-store: classpath:sample.jks
-    key-store-password: secret
-    key-password: password
+#  ssl:
+#    key-store: classpath:sample.jks
+#    key-store-password: secret
+#    key-password: password
   http2:
     enabled: true
 
 spring:
   cloud:
     gateway:
-#      httpserver:
-#        wiretap: true
-      httpclient:
+      routes:
+      - id: grpcbin
+#        uri: grpc://grpcb.in:9000/
+        uri: grpc://localhost:6565
+        predicates:
+        - Path=/**
+#        - Host=example.grpcb.in
+        filters:
+        - StripPrefix=0
+      httpserver:
         wiretap: true
+      httpclient:
+        wiretap: false
+        pool:
+          type: DISABLED
         ssl:
           use-insecure-trust-manager: true
+      filter:
+        remove-non-proxy-headers:
+          headers:
+          - Connection
+          - Keep-Alive
+          - Proxy-Authenticate
+          - Proxy-Authorization
+          - Upgrade
+          - transfer-encoding
+
+

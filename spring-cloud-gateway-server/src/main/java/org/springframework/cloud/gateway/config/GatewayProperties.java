@@ -16,12 +16,11 @@
 
 package org.springframework.cloud.gateway.config;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,7 +59,10 @@ public class GatewayProperties {
 	private List<FilterDefinition> defaultFilters = new ArrayList<>();
 
 	private List<MediaType> streamingMediaTypes = Arrays.asList(MediaType.TEXT_EVENT_STREAM,
-			MediaType.APPLICATION_STREAM_JSON);
+			MediaType.APPLICATION_STREAM_JSON,
+			new MediaType("application", "grpc"),
+			new MediaType("application", "grpc+protobuf"),
+			new MediaType("application", "grpc+json"));
 
 	/**
 	 * Option to fail on route definition errors, defaults to true. Otherwise, a warning
